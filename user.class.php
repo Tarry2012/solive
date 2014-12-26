@@ -27,7 +27,6 @@ class User{
 	//登录成功返回true，失败返回false
 	public function userLogin($name, $passwd){
 		$uid = $this->findUidByUname($name);
-		
 		if ($uid == false){
 //			echo "该用户不存在\n";
 			return false;
@@ -36,7 +35,7 @@ class User{
 			$sql = "select passwd from user where uid = '$uid';";
 			$result = $this->conn->query($sql);
 			$getPasswd = $result[0]['passwd'];
-
+            
 			if ($passwd == $getPasswd){
 				return true;
 			}else{
@@ -49,8 +48,8 @@ class User{
 	//增加用户，参数为存储用户信息的数组(user表中所有字段)，添加成功返回true，失败返回false
 	public function addUser($arrayUser){
 		$result = $this->findUidByUname($arrayUser['name']);
-		
-		if ($result != false){
+
+		if ($result){
 //			echo "用户已存在\n";
 			return false;
 		}else{
@@ -62,6 +61,8 @@ class User{
 			$status = $arrayUser['status'];
 		
 			$sql = "insert into user(name, head, passwd, nickname, sex, wechat, email, phone, status, workplace, pwdpasswd) values('$name', null, '$passwd', '$nickname', '$sex', '$wechat', null, null, 1, null, null);";
+			
+			$sql = "insert into user(name, passwd, nickname, sex, wechat) values('$name', '$passwd', '$nickname', '$sex', '$wechat');";
 			$result = $this->conn->query($sql);
 			return $result;
 			
@@ -109,9 +110,7 @@ class User{
 //					 echo "查询失败！\n";
 					return false;
 				}else{
-	//				print_r ($result);
 					$arrayUser = array();
-					$arrayUser['uid']  = $result[0]['uid'];
 					$arrayUser['name'] = $result[0]['name'];
 					$arrayUser['head'] = $result[0]['head'];
 					$arrayUser['passwd'] = $result[0]['passwd'];
@@ -122,10 +121,8 @@ class User{
 					$arrayUser['status'] = $result[0]['status'];
 					$arrayUser['place'] = $result[0]['place'];
 					$arrayUser['workplace'] = $result[0]['workplace'];
-					$arrayUser['wechat'] = $result[0]['wechat'];
 					$arrayUser['pwdpasswd'] = $result[0]['pwdpasswd'];
 					
-	//				print_r ($arrayUser);
 					return $arrayUser;
 				}
 			}
@@ -175,7 +172,6 @@ class User{
 			return false;
 		}else{
 			$pwdpasswd = $result[0]['pwdpasswd'];
-			echo "pwdpasswd = $pwdpasswd\n";
 			if (empty($pwdpasswd)){
 //				echo "该用户没有设定密码包密码\n";
 				return false;
