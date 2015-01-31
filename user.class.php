@@ -19,6 +19,8 @@ class User{
 		if ($result == false){
 			return false;
 		}else {
+			$uid = $result[0]['uid'];
+			echo "uid = $uid\n";
 			return $result[0]['uid'];
 		}
 	}
@@ -58,11 +60,9 @@ class User{
 			$nickname = $arrayUser['nickname'];
 			$sex = (int)$arrayUser['sex'];
 			$wechat = $arrayUser['wechat'];
-			$status = $arrayUser['status'];
 		
 			$sql = "insert into user(name, head, passwd, nickname, sex, wechat, email, phone, status, workplace, pwdpasswd) values('$name', null, '$passwd', '$nickname', '$sex', '$wechat', null, null, 1, null, null);";
 			
-			$sql = "insert into user(name, passwd, nickname, sex, wechat) values('$name', '$passwd', '$nickname', '$sex', '$wechat');";
 			$result = $this->conn->query($sql);
 			return $result;
 			
@@ -163,19 +163,20 @@ class User{
 
 
 	//获得用户密码包密码,失败返回false，成功返回密码包密码 
-	public function findPwdpassword($uid){
-		$sql = "select pwdpasswd from user where uid = '$uid';";
+	public function findPwdpassword($string){
+		$sql = "select pwdpasswd from user where name = '$string';";
 		$result = $this->conn->query($sql);
 
 		if ($result == false){
-//			echo "查询密码包密码失败\n";
+	//		echo "查询密码包密码失败\n";
 			return false;
 		}else{
 			$pwdpasswd = $result[0]['pwdpasswd'];
 			if (empty($pwdpasswd)){
-//				echo "该用户没有设定密码包密码\n";
+	//			echo "该用户没有设定密码包密码\n";
 				return false;
 			}else{
+	//			echo "pwdpasswd = $pwdpasswd\n";
 				return $pwdpasswd;
 			}
 		}
