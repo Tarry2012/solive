@@ -1,6 +1,8 @@
 <?php
 
 require_once ("conn.php");
+require_once("classify.php");
+require_once("group.php");
 
 //用户类
 class User{
@@ -64,8 +66,23 @@ class User{
 			$sql = "insert into user(name, head, passwd, nickname, sex, wechat, email, phone, status, workplace, pwdpasswd) values('$name', null, '$passwd', '$nickname', '$sex', '$wechat', null, null, 1, null, null);";
 			
 			$result = $this->conn->query($sql);
-			return $result;
-			
+			if ($result == false){
+				return false;
+			}else{
+				$sql = "select last_insert_id();";
+				$result = $this->conn->query($sql);
+				$uid = $result[0]['last_insert_id()'];
+	//			echo "uid = $uid";
+				$classObj = new Class();
+			        $addclass = classObj.addOther($uid);
+				$groupObj = new Group();
+				$addgroup = groupObj.addOther($uid);
+				if ($addclass == false || $addgroup == false){
+					return false;			
+				}else{
+					return true;
+				}
+			}
 		}
 	}
 	
