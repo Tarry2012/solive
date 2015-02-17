@@ -6,6 +6,11 @@
 	class Passwd{
 		private $conn;
 
+		//构造函数，初始化数据库
+		public  function __construct(){
+			$this->conn = new Solivesdb();
+		}
+
 		//判断密码包密码是否正确
 		public function checkPwdpassword($arrayPwd){
 			$name = $arrayPwd['name'];
